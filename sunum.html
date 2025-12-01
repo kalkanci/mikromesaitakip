@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesai Takip Sistemi - Yönetim Sunumu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-print-color-adjust: exact; }
+        @media print {
+            .no-print { display: none; }
+            .page-break { page-break-before: always; }
+            body { padding: 0; background: white; }
+            .shadow-xl { shadow: none !important; box-shadow: none !important; }
+            .container { max-width: 100% !important; margin: 0 !important; padding: 0 40px !important; }
+        }
+        .screenshot-placeholder {
+            background-color: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            border-radius: 0.75rem;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-weight: 600;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+        .screenshot-placeholder::after {
+            content: "📸 Buraya Ekran Görüntüsü Gelecek";
+        }
+    </style>
+</head>
+<body class="bg-gray-100 py-10">
+
+    <!-- Kontrol Paneli (Yazdırırken Görünmez) -->
+    <div class="fixed top-5 right-5 no-print z-50">
+        <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+            PDF Olarak Kaydet / Yazdır
+        </button>
+    </div>
+
+    <div class="container mx-auto max-w-4xl bg-white p-12 shadow-xl rounded-2xl">
+        
+        <!-- KAPAK SAYFASI -->
+        <div class="flex flex-col items-center justify-center h-[800px] text-center border-b-4 border-blue-600 mb-12">
+            <div class="w-32 h-32 bg-blue-600 rounded-3xl flex items-center justify-center mb-8">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            </div>
+            <h1 class="text-5xl font-extrabold text-slate-900 mb-4">Kurumsal Mesai Takip Sistemi</h1>
+            <h2 class="text-2xl text-slate-500 font-medium">Dijital Dönüşüm & Verimlilik Projesi</h2>
+            <div class="mt-20 text-slate-400">
+                <p>Hazırlayan: Yazılım Geliştirme Ekibi</p>
+                <p id="date"></p>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- YÖNETİCİ ÖZETİ -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6 border-l-8 border-blue-600 pl-4">1. Yönetici Özeti</h2>
+            <p class="text-slate-600 text-lg leading-relaxed mb-4">
+                Mevcut Excel tabanlı veya manuel takip süreçlerinin yerini alması amacıyla geliştirilen <strong>Kurumsal Mesai Takip Sistemi</strong>, şirketimizin insan kaynakları süreçlerini dijitalleştirmeyi, hata payını sıfıra indirmeyi ve onay süreçlerini hızlandırmayı hedeflemektedir.
+            </p>
+            <p class="text-slate-600 text-lg leading-relaxed">
+                Bu sistem ile Takım Liderleri ekiplerini daha şeffaf yönetebilecek, Yönetim kadrosu ise anlık maliyet raporlarına tek tıkla ulaşabilecektir. Microsoft Entra ID (Azure) entegrasyonu sayesinde kurumsal güvenlik standartlarına tam uyumludur.
+            </p>
+        </section>
+
+        <!-- TEMEL FAYDALAR -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6 border-l-8 border-green-500 pl-4">2. Kazanımlar ve Faydalar</h2>
+            <div class="grid grid-cols-2 gap-6">
+                <div class="p-6 bg-slate-50 rounded-xl border border-slate-200">
+                    <h3 class="font-bold text-xl text-slate-800 mb-2 flex items-center gap-2">🚀 Operasyonel Hız</h3>
+                    <p class="text-slate-600">Manuel e-posta trafiği yerine, sistem üzerinden anlık talep ve onay mekanizması.</p>
+                </div>
+                <div class="p-6 bg-slate-50 rounded-xl border border-slate-200">
+                    <h3 class="font-bold text-xl text-slate-800 mb-2 flex items-center gap-2">💰 Maliyet Kontrolü</h3>
+                    <p class="text-slate-600">Mesai çarpanları (Hafta sonu x1.5, Tatil x2.0) otomatik hesaplanır, bütçe takibi kolaylaşır.</p>
+                </div>
+                <div class="p-6 bg-slate-50 rounded-xl border border-slate-200">
+                    <h3 class="font-bold text-xl text-slate-800 mb-2 flex items-center gap-2">🔒 Güvenlik & KVKK</h3>
+                    <p class="text-slate-600">Microsoft hesabı ile güvenli giriş. Herkes sadece yetkisi dahilindeki veriyi görür.</p>
+                </div>
+                <div class="p-6 bg-slate-50 rounded-xl border border-slate-200">
+                    <h3 class="font-bold text-xl text-slate-800 mb-2 flex items-center gap-2">📱 Mobil Uyumlu (PWA)</h3>
+                    <p class="text-slate-600">Bilgisayar, tablet veya telefondan uygulama gibi erişim imkanı.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="page-break"></div>
+
+        <!-- MODÜLLER VE EKRAN GÖRÜNTÜLERİ -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6 border-l-8 border-purple-600 pl-4">3. Modüller ve Özellikler</h2>
+
+            <!-- Personel Modülü -->
+            <div class="mb-10">
+                <h3 class="text-2xl font-bold text-slate-800 mb-3">A. Personel Paneli</h3>
+                <ul class="list-disc list-inside text-slate-600 mb-4 space-y-1">
+                    <li>Kolay ve hızlı mesai girişi.</li>
+                    <li>Geçmiş onaylanmış/reddedilmiş taleplerin takibi.</li>
+                    <li>Toplam onaylı saatlerin anlık görüntülenmesi.</li>
+                </ul>
+                <div class="screenshot-placeholder bg-blue-50 border-blue-200 text-blue-400">
+                    <!-- BURAYA UYGULAMANIZDAN ALDIĞINIZ EKRAN GÖRÜNTÜSÜNÜ YAPIŞTIRIN -->
+                    [EKRAN GÖRÜNTÜSÜ: Personel Giriş Ekranı]
+                </div>
+            </div>
+
+            <!-- Lider Modülü -->
+            <div class="mb-10">
+                <h3 class="text-2xl font-bold text-slate-800 mb-3">B. Takım Lideri Paneli (Yeni!)</h3>
+                <ul class="list-disc list-inside text-slate-600 mb-4 space-y-1">
+                    <li><strong>Dashboard:</strong> Ekibin o ayki performansı, bekleyen talepler ve kişi bazlı grafikler.</li>
+                    <li><strong>Hızlı Onay:</strong> Doğrudan bağlı personellerin taleplerini tek tıkla onaylama/reddetme.</li>
+                    <li><strong>Oto-Onaylı Giriş:</strong> Liderin kendi mesailerini onay sürecine takılmadan girmesi.</li>
+                </ul>
+                <div class="screenshot-placeholder bg-orange-50 border-orange-200 text-orange-400">
+                    <!-- BURAYA UYGULAMANIZDAN ALDIĞINIZ EKRAN GÖRÜNTÜSÜNÜ YAPIŞTIRIN -->
+                    [EKRAN GÖRÜNTÜSÜ: Lider Dashboard Paneli]
+                </div>
+            </div>
+
+            <div class="page-break"></div>
+
+            <!-- Admin Modülü -->
+            <div class="mb-10">
+                <h3 class="text-2xl font-bold text-slate-800 mb-3">C. Yönetim (Admin) Paneli</h3>
+                <ul class="list-disc list-inside text-slate-600 mb-4 space-y-1">
+                    <li><strong>Tanrı Modu:</strong> Tüm kayıtları düzenleme, silme ve statü değiştirme yetkisi.</li>
+                    <li><strong>Raporlama:</strong> Departman bazlı maliyet analizleri ve Excel (CSV) çıktısı alma.</li>
+                    <li><strong>Kullanıcı Yönetimi:</strong> Rol atama, yönetici belirleme ve personel ekleme.</li>
+                </ul>
+                <div class="screenshot-placeholder bg-purple-50 border-purple-200 text-purple-400">
+                     <!-- BURAYA UYGULAMANIZDAN ALDIĞINIZ EKRAN GÖRÜNTÜSÜNÜ YAPIŞTIRIN -->
+                    [EKRAN GÖRÜNTÜSÜ: Admin Raporlama Ekranı]
+                </div>
+            </div>
+        </section>
+
+        <!-- KULLANIM KILAVUZU -->
+        <section class="mb-12 bg-slate-50 p-8 rounded-2xl border border-slate-200">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6 border-l-8 border-slate-600 pl-4">4. Hızlı Kullanım Kılavuzu</h2>
+            
+            <div class="space-y-6">
+                <div>
+                    <h4 class="font-bold text-lg text-blue-600">Personel İçin:</h4>
+                    <p class="text-sm text-slate-600">1. Microsoft hesabınızla giriş yapın.<br>2. Tarih, saat ve açıklama girerek "Listeye Ekle" deyin.<br>3. Tüm girişleri tamamlayınca "Onaya Gönder" butonuna basın.</p>
+                </div>
+                <hr class="border-slate-200">
+                <div>
+                    <h4 class="font-bold text-lg text-orange-600">Takım Lideri İçin:</h4>
+                    <p class="text-sm text-slate-600">1. "Ekip Yönetimi" sekmesinden personel taleplerini inceleyin ve Onayla/Reddet butonlarını kullanın.<br>2. Kendi mesainiz için "Şahsi Mesai Girişi" sekmesini kullanın (Otomatik onaylanır).</p>
+                </div>
+                <hr class="border-slate-200">
+                <div>
+                    <h4 class="font-bold text-lg text-purple-600">Admin İçin:</h4>
+                    <p class="text-sm text-slate-600">1. "Raporlar" sekmesinden genel durumu izleyin.<br>2. "Veritabanı" sekmesinden detaylı filtreleme yapın ve Excel'e aktarın.<br>3. "Kullanıcılar" sekmesinden yeni personel ekleyin veya yöneticileri atayın.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="text-center text-slate-400 text-sm mt-12 border-t pt-6">
+            <p>Bu rapor sistemi tarafından otomatik oluşturulmuştur.</p>
+        </div>
+
+    </div>
+
+    <script>
+        document.getElementById('date').innerText = new Date().toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' });
+    </script>
+</body>
+</html>
+    
