@@ -36,7 +36,8 @@ import {
   PieChart,
   GitBranch,
   LayoutDashboard,
-  UserPlus
+  UserPlus,
+  Menu // Menu icon ekledik mobil header için
 } from 'lucide-react';
 
 // --- MSAL (MICROSOFT ENTRA ID) KONFİGÜRASYONU ---
@@ -207,18 +208,18 @@ const exportToCSV = (data: MesaiKaydi[]) => {
 
 const StatusBadge = ({ status }: { status: MesaiDurumu }) => {
   switch (status) {
-    case 'onaylandi': return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200"><Check size={12} className="mr-1"/> Onaylandı</span>;
-    case 'reddedildi': return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 border border-red-200"><X size={12} className="mr-1"/> Reddedildi</span>;
-    default: return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 border border-amber-200"><Clock size={12} className="mr-1"/> Bekliyor</span>;
+    case 'onaylandi': return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] md:text-xs font-medium bg-green-100 text-green-800 border border-green-200"><Check size={10} className="mr-1"/> Onay</span>;
+    case 'reddedildi': return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] md:text-xs font-medium bg-red-100 text-red-800 border border-red-200"><X size={10} className="mr-1"/> Red</span>;
+    default: return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] md:text-xs font-medium bg-amber-100 text-amber-800 border border-amber-200"><Clock size={10} className="mr-1"/> Bekliyor</span>;
   }
 };
 
 const Toast = ({ message, type, onClose }: { message: string, type: 'success' | 'error', onClose: () => void }) => {
   useEffect(() => { const timer = setTimeout(onClose, 3000); return () => clearTimeout(timer); }, [onClose]);
   return (
-    <div className={`fixed top-24 right-4 z-[999] flex items-center gap-3 px-6 py-4 rounded-xl shadow-2xl animate-in slide-in-from-right fade-in duration-300 ${type === 'success' ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'}`}>
+    <div className={`fixed top-20 right-4 left-4 md:left-auto md:w-auto z-[999] flex items-center gap-3 px-6 py-4 rounded-xl shadow-2xl animate-in slide-in-from-top-5 md:slide-in-from-right fade-in duration-300 ${type === 'success' ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'}`}>
       {type === 'success' ? <CheckCircle2 size={24} /> : <AlertCircle size={24} />}
-      <span className="font-semibold">{message}</span>
+      <span className="font-semibold text-sm md:text-base">{message}</span>
     </div>
   );
 };
@@ -240,46 +241,46 @@ const MicrosoftLoginPage = ({ onDemoLogin }: { onDemoLogin: (userIndex: number) 
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
-      <div className="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-sm border border-slate-200 text-center relative overflow-hidden">
+      <div className="bg-white p-6 md:p-10 rounded-3xl shadow-2xl w-full max-w-sm border border-slate-200 text-center relative overflow-hidden">
         <div className="flex justify-center mb-6">
           <div className="bg-blue-50 p-4 rounded-3xl">
              <AppLogo size={64} />
           </div>
         </div>
-        <h1 className="text-2xl font-bold text-slate-800 mb-2">Mesai Takip</h1>
-        <p className="text-sm text-slate-400 mb-8">Kurumsal hesabınızla güvenli giriş.</p>
+        <h1 className="text-xl md:text-2xl font-bold text-slate-800 mb-2">Mesai Takip</h1>
+        <p className="text-xs md:text-sm text-slate-400 mb-8">Kurumsal hesabınızla güvenli giriş.</p>
         
         <button onClick={handleLogin} className="w-full bg-[#2F2F2F] hover:bg-[#1a1a1a] text-white py-3.5 rounded-xl font-medium transition-all shadow-lg active:scale-95 flex items-center justify-center gap-3 mb-6">
-          <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>
-          <span className="font-semibold">Microsoft ile Giriş Yap</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>
+          <span className="font-semibold text-sm md:text-base">Microsoft ile Giriş Yap</span>
         </button>
 
         <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200"></div></div>
-            <div className="relative flex justify-center text-xs uppercase"><span className="bg-white px-2 text-slate-400">Veya Demo Seçin</span></div>
+            <div className="relative flex justify-center text-[10px] md:text-xs uppercase"><span className="bg-white px-2 text-slate-400">Veya Demo Seçin</span></div>
         </div>
 
         <div className="grid grid-cols-1 gap-3">
              <button onClick={() => onDemoLogin(2)} className="group flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition-all bg-white">
                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600"><User size={20}/></div>
-                    <div className="text-left"><div className="font-bold text-slate-700 group-hover:text-blue-700 text-sm">Personel</div><div className="text-[10px] text-slate-400">Mehmet Demir</div></div>
+                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600"><User size={18} className="md:w-5 md:h-5"/></div>
+                    <div className="text-left"><div className="font-bold text-slate-700 group-hover:text-blue-700 text-xs md:text-sm">Personel</div><div className="text-[10px] text-slate-400">Mehmet Demir</div></div>
                  </div>
                  <div className="text-slate-300 group-hover:text-blue-500"><TrendingUp size={16}/></div>
              </button>
 
              <button onClick={() => onDemoLogin(1)} className="group flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-orange-500 hover:bg-orange-50 transition-all bg-white">
                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600"><BriefcaseIcon size={20}/></div>
-                    <div className="text-left"><div className="font-bold text-slate-700 group-hover:text-orange-700 text-sm">Takım Lideri</div><div className="text-[10px] text-slate-400">Ali Koç</div></div>
+                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600"><BriefcaseIcon size={18} className="md:w-5 md:h-5"/></div>
+                    <div className="text-left"><div className="font-bold text-slate-700 group-hover:text-orange-700 text-xs md:text-sm">Takım Lideri</div><div className="text-[10px] text-slate-400">Ali Koç</div></div>
                  </div>
                  <div className="text-slate-300 group-hover:text-orange-500"><Users size={16}/></div>
              </button>
 
              <button onClick={() => onDemoLogin(0)} className="group flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-purple-500 hover:bg-purple-50 transition-all bg-white">
                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600"><Crown size={20}/></div>
-                    <div className="text-left"><div className="font-bold text-slate-700 group-hover:text-purple-700 text-sm">Admin</div><div className="text-[10px] text-slate-400">Ahmet Yılmaz</div></div>
+                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600"><Crown size={18} className="md:w-5 md:h-5"/></div>
+                    <div className="text-left"><div className="font-bold text-slate-700 group-hover:text-purple-700 text-xs md:text-sm">Admin</div><div className="text-[10px] text-slate-400">Ahmet Yılmaz</div></div>
                  </div>
                  <div className="text-slate-300 group-hover:text-purple-500"><UserCog size={16}/></div>
              </button>
@@ -324,62 +325,64 @@ const UserPage = ({ currentUser, onSaveToDatabase, onUpdateDatabase, database }:
       onUpdateDatabase(updatedDB); setEditItem(null); setNotification({ msg: "Güncellendi.", type: 'success' }); 
   }};
 
-  const inputClass = "w-full p-3 bg-white border border-slate-300 rounded-lg text-slate-800 shadow-sm focus:ring-2 focus:ring-blue-500 outline-none";
+  const inputClass = "w-full p-3 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm md:text-base shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all";
   
   return (
     <div className="relative">
       {notification && <Toast message={notification.msg} type={notification.type} onClose={() => setNotification(null)} />}
-      <div className="flex justify-end mb-4"><div className="bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-200 flex items-center gap-3"><Clock className="text-green-700" size={18} /><p className="text-lg font-bold text-slate-800">{totalApprovedHours.toFixed(1)} <span className="text-sm font-normal text-slate-500">Saat Onaylı</span></p></div></div>
-      <div className="flex gap-4 mb-6 border-b pb-1">
-        <button onClick={() => setActiveTab('new')} className={`pb-2 px-4 font-medium flex items-center gap-2 ${activeTab === 'new' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500'}`}><Plus size={18}/> Yeni Giriş</button>
-        <button onClick={() => setActiveTab('history')} className={`pb-2 px-4 font-medium flex items-center gap-2 ${activeTab === 'history' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500'}`}><ListFilter size={18}/> Geçmiş ({myHistory.length})</button>
+      <div className="flex justify-end mb-4"><div className="bg-white px-3 py-2 md:px-4 md:py-2 rounded-xl shadow-sm border border-slate-200 flex items-center gap-3"><Clock className="text-green-700 w-4 h-4 md:w-5 md:h-5" /><p className="text-base md:text-lg font-bold text-slate-800">{totalApprovedHours.toFixed(1)} <span className="text-xs md:text-sm font-normal text-slate-500">Saat Onaylı</span></p></div></div>
+      <div className="flex gap-4 mb-6 border-b pb-1 overflow-x-auto">
+        <button onClick={() => setActiveTab('new')} className={`pb-2 px-2 md:px-4 font-medium whitespace-nowrap flex items-center gap-2 text-sm md:text-base ${activeTab === 'new' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500'}`}><Plus size={18}/> Yeni Giriş</button>
+        <button onClick={() => setActiveTab('history')} className={`pb-2 px-2 md:px-4 font-medium whitespace-nowrap flex items-center gap-2 text-sm md:text-base ${activeTab === 'history' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500'}`}><ListFilter size={18}/> Geçmiş ({myHistory.length})</button>
       </div>
 
       {activeTab === 'new' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-1 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit space-y-4">
-             <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2"><Plus className="text-blue-600"/> Giriş Paneli</h2>
+          <div className="lg:col-span-1 bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-200 h-fit space-y-4">
+             <h2 className="text-base md:text-lg font-bold text-slate-800 flex items-center gap-2"><Plus className="text-blue-600"/> Giriş Paneli</h2>
              <select name="donem" value={formData.donem} onChange={handleInputChange} className={inputClass}>{DONEMLER.map(d => <option key={d} value={d}>{d}</option>)}</select>
              <input type="text" value={formData.isim} readOnly className={`${inputClass} bg-slate-50 font-semibold`} />
              <input type="date" name="tarih" value={formData.tarih} onChange={handleInputChange} className={inputClass} />
              <div className="grid grid-cols-2 gap-3"><input type="time" name="baslangic" value={formData.baslangic} onChange={handleInputChange} className={inputClass}/><input type="time" name="bitis" value={formData.bitis} onChange={handleInputChange} className={inputClass}/></div>
              <textarea name="neden" value={formData.neden} onChange={handleInputChange} rows={3} className={inputClass} placeholder="Açıklama..."></textarea>
-             <button onClick={handleAddToList} className="w-full bg-blue-600 text-white py-3.5 rounded-xl font-medium hover:bg-blue-700 transition flex items-center justify-center gap-2"><Plus size={18}/> Ekle</button>
+             <button onClick={handleAddToList} className="w-full bg-blue-600 text-white py-3.5 rounded-xl font-medium hover:bg-blue-700 transition flex items-center justify-center gap-2 text-sm md:text-base"><Plus size={18}/> Ekle</button>
           </div>
           <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col">
-            <div className="p-4 border-b bg-slate-50 flex justify-between"><h3 className="font-bold text-slate-700">Taslaklar</h3><span className="text-xs bg-white px-2 py-1 rounded border">{stagingList.length}</span></div>
-            <div className="flex-1 p-4 space-y-3 min-h-[300px]">
+            <div className="p-4 border-b bg-slate-50 flex justify-between items-center"><h3 className="font-bold text-slate-700 text-sm md:text-base">Taslaklar</h3><span className="text-xs bg-white px-2 py-1 rounded border">{stagingList.length}</span></div>
+            <div className="flex-1 p-4 space-y-3 min-h-[200px] md:min-h-[300px]">
               {stagingList.map(item => (
                 <div key={item.id} className="flex justify-between p-4 bg-white rounded-xl border border-slate-200 shadow-sm relative">
-                  <div><div className="font-bold text-slate-800">{item.tarih} ({item.baslangic}-{item.bitis})</div><div className="text-sm text-slate-600">{item.neden}</div></div>
-                  <button onClick={() => setStagingList(stagingList.filter(i => i.id !== item.id))} className="text-slate-300 hover:text-red-500"><Trash2 size={18}/></button>
+                  <div><div className="font-bold text-slate-800 text-sm md:text-base">{item.tarih} ({item.baslangic}-{item.bitis})</div><div className="text-xs md:text-sm text-slate-600">{item.neden}</div></div>
+                  <button onClick={() => setStagingList(stagingList.filter(i => i.id !== item.id))} className="text-slate-300 hover:text-red-500 p-2"><Trash2 size={18}/></button>
                 </div>
               ))}
             </div>
-            <div className="p-4 border-t bg-slate-50"><button onClick={handleSend} disabled={stagingList.length === 0} className="w-full bg-green-600 disabled:bg-slate-300 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2"><Send size={18}/> ONAYA GÖNDER</button></div>
+            <div className="p-4 border-t bg-slate-50"><button onClick={handleSend} disabled={stagingList.length === 0} className="w-full bg-green-600 disabled:bg-slate-300 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-sm md:text-base"><Send size={18}/> ONAYA GÖNDER</button></div>
           </div>
         </div>
       )}
 
       {activeTab === 'history' && (
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-          <table className="w-full text-sm text-left text-slate-600">
-            <thead className="bg-slate-50 text-slate-500 uppercase text-xs"><tr><th className="px-6 py-3">Durum</th><th className="px-6 py-3">Tarih</th><th className="px-6 py-3">Saat</th><th className="px-6 py-3">Süre</th><th className="px-6 py-3">Neden</th><th className="px-6 py-3 text-right">İşlem</th></tr></thead>
-            <tbody className="divide-y divide-slate-100">
-              {myHistory.map(item => (
-                <tr key={item.id} className="hover:bg-slate-50">
-                  <td className="px-6 py-4"><StatusBadge status={item.durum} />{item.reddedilmeNedeni && <div className="text-[10px] text-red-600 font-medium">{item.reddedilmeNedeni}</div>}</td>
-                  <td className="px-6 py-4">{item.tarih}</td><td className="px-6 py-4">{item.baslangic}-{item.bitis}</td><td className="px-6 py-4">{Math.max(0, calculateHours(item.baslangic, item.bitis)).toFixed(2)} sa</td><td className="px-6 py-4 truncate max-w-xs">{item.neden}</td>
-                  <td className="px-6 py-4 text-right">{item.durum === 'bekliyor' && <div className="flex justify-end gap-2"><button onClick={() => setEditItem(item)} className="text-blue-400"><Edit3 size={18}/></button><button onClick={() => setDeleteId(item.id)} className="text-red-400"><Trash2 size={18}/></button></div>}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left text-slate-600 whitespace-nowrap">
+              <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] md:text-xs"><tr><th className="px-4 py-3 md:px-6">Durum</th><th className="px-4 py-3 md:px-6">Tarih</th><th className="px-4 py-3 md:px-6">Saat</th><th className="px-4 py-3 md:px-6">Süre</th><th className="px-4 py-3 md:px-6">Neden</th><th className="px-4 py-3 md:px-6 text-right">İşlem</th></tr></thead>
+              <tbody className="divide-y divide-slate-100">
+                {myHistory.map(item => (
+                  <tr key={item.id} className="hover:bg-slate-50">
+                    <td className="px-4 py-4 md:px-6"><StatusBadge status={item.durum} />{item.reddedilmeNedeni && <div className="text-[10px] text-red-600 font-medium mt-1">{item.reddedilmeNedeni}</div>}</td>
+                    <td className="px-4 py-4 md:px-6">{item.tarih}</td><td className="px-4 py-4 md:px-6">{item.baslangic}-{item.bitis}</td><td className="px-4 py-4 md:px-6">{Math.max(0, calculateHours(item.baslangic, item.bitis)).toFixed(2)} sa</td><td className="px-4 py-4 md:px-6 truncate max-w-xs">{item.neden}</td>
+                    <td className="px-4 py-4 md:px-6 text-right">{item.durum === 'bekliyor' && <div className="flex justify-end gap-2"><button onClick={() => setEditItem(item)} className="text-blue-400 p-1"><Edit3 size={18}/></button><button onClick={() => setDeleteId(item.id)} className="text-red-400 p-1"><Trash2 size={18}/></button></div>}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
-      {/* MODALS: Edit & Delete (Simplified for brevity but functional) */}
-      {editItem && <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"><div className="bg-white p-6 rounded-2xl w-96"><h3 className="font-bold mb-4">Düzenle</h3><input type="date" value={editItem.tarih} onChange={e => setEditItem({...editItem, tarih: e.target.value})} className={inputClass + " mb-2"}/><div className="flex gap-2 mb-2"><input type="time" value={editItem.baslangic} onChange={e=>setEditItem({...editItem, baslangic: e.target.value})} className={inputClass}/><input type="time" value={editItem.bitis} onChange={e=>setEditItem({...editItem, bitis: e.target.value})} className={inputClass}/></div><textarea value={editItem.neden} onChange={e=>setEditItem({...editItem, neden: e.target.value})} className={inputClass} rows={3}></textarea><div className="flex justify-end gap-2 mt-4"><button onClick={()=>setEditItem(null)} className="px-4 py-2">İptal</button><button onClick={saveEdit} className="bg-blue-600 text-white px-4 py-2 rounded">Kaydet</button></div></div></div>}
-      {deleteId && <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"><div className="bg-white p-6 rounded-2xl"><p className="mb-4">Emin misiniz?</p><div className="flex gap-2"><button onClick={()=>setDeleteId(null)} className="flex-1 py-2 bg-slate-100">Vazgeç</button><button onClick={confirmDelete} className="flex-1 py-2 bg-red-600 text-white">Sil</button></div></div></div>}
+      {/* MODALS: Edit & Delete (Responsive) */}
+      {editItem && <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"><div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-2xl"><h3 className="font-bold mb-4 text-lg">Düzenle</h3><input type="date" value={editItem.tarih} onChange={e => setEditItem({...editItem, tarih: e.target.value})} className={inputClass + " mb-2"}/><div className="flex gap-2 mb-2"><input type="time" value={editItem.baslangic} onChange={e=>setEditItem({...editItem, baslangic: e.target.value})} className={inputClass}/><input type="time" value={editItem.bitis} onChange={e=>setEditItem({...editItem, bitis: e.target.value})} className={inputClass}/></div><textarea value={editItem.neden} onChange={e=>setEditItem({...editItem, neden: e.target.value})} className={inputClass} rows={3}></textarea><div className="flex justify-end gap-2 mt-4"><button onClick={()=>setEditItem(null)} className="px-4 py-2 text-sm text-slate-600">İptal</button><button onClick={saveEdit} className="bg-blue-600 text-white px-4 py-2 rounded text-sm font-bold">Kaydet</button></div></div></div>}
+      {deleteId && <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"><div className="bg-white p-6 rounded-2xl w-full max-w-sm shadow-2xl"><p className="mb-4 text-lg font-medium text-slate-800">Emin misiniz?</p><div className="flex gap-2"><button onClick={()=>setDeleteId(null)} className="flex-1 py-3 bg-slate-100 rounded-lg text-slate-600 font-medium">Vazgeç</button><button onClick={confirmDelete} className="flex-1 py-3 bg-red-600 text-white rounded-lg font-bold">Sil</button></div></div></div>}
     </div>
   );
 };
@@ -444,62 +447,64 @@ const TeamLeadPage = ({ currentUser, database, onUpdateDatabase, onSaveToDatabas
 
   const handleSend = () => { if (stagingList.length > 0) { onSaveToDatabase(stagingList); setStagingList([]); setNotification({ msg: "Kayıtlar sisteme işlendi.", type: 'success' }); } };
 
-  const inputClass = "w-full p-3 bg-white border border-slate-300 rounded-lg text-slate-800 shadow-sm focus:ring-2 focus:ring-orange-500 outline-none";
+  const inputClass = "w-full p-3 bg-white border border-slate-300 rounded-lg text-slate-800 text-sm md:text-base shadow-sm focus:ring-2 focus:ring-orange-500 outline-none";
 
   return (
     <div className="space-y-6">
       {notification && <Toast message={notification.msg} type={notification.type} onClose={() => setNotification(null)} />}
       
-      <div className="flex gap-4 mb-6">
-         <button onClick={() => setActiveTab('team')} className={`flex-1 py-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-all ${activeTab === 'team' ? 'bg-orange-600 text-white shadow-lg' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'}`}><LayoutDashboard size={20}/> Ekip Yönetimi & Dashboard</button>
-         <button onClick={() => setActiveTab('personal')} className={`flex-1 py-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-all ${activeTab === 'personal' ? 'bg-blue-600 text-white shadow-lg' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'}`}><UserPlus size={20}/> Şahsi Mesai Girişi (Oto-Onay)</button>
+      <div className="flex flex-col sm:flex-row gap-4 mb-6">
+         <button onClick={() => setActiveTab('team')} className={`flex-1 py-3 md:py-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-all text-sm md:text-base ${activeTab === 'team' ? 'bg-orange-600 text-white shadow-lg' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'}`}><LayoutDashboard size={20}/> Ekip Yönetimi & Dashboard</button>
+         <button onClick={() => setActiveTab('personal')} className={`flex-1 py-3 md:py-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-all text-sm md:text-base ${activeTab === 'personal' ? 'bg-blue-600 text-white shadow-lg' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'}`}><UserPlus size={20}/> Şahsi Mesai Girişi</button>
       </div>
       
       {activeTab === 'team' && (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
            {/* DASHBOARD STATS */}
            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+              <div className="bg-white p-4 md:p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
                  <div className="p-3 bg-orange-100 text-orange-600 rounded-lg"><Users size={24}/></div>
-                 <div><div className="text-2xl font-bold text-slate-800">{myDirectReports.length}</div><div className="text-xs text-slate-500">Bağlı Personel</div></div>
+                 <div><div className="text-xl md:text-2xl font-bold text-slate-800">{myDirectReports.length}</div><div className="text-xs text-slate-500">Bağlı Personel</div></div>
               </div>
-              <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+              <div className="bg-white p-4 md:p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
                  <div className="p-3 bg-red-100 text-red-600 rounded-lg"><AlertCircle size={24}/></div>
-                 <div><div className="text-2xl font-bold text-slate-800">{teamStats.pendingCount}</div><div className="text-xs text-slate-500">Onay Bekleyen Talep</div></div>
+                 <div><div className="text-xl md:text-2xl font-bold text-slate-800">{teamStats.pendingCount}</div><div className="text-xs text-slate-500">Onay Bekleyen Talep</div></div>
               </div>
-              <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
+              <div className="bg-white p-4 md:p-5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
                  <div className="p-3 bg-green-100 text-green-600 rounded-lg"><Clock size={24}/></div>
-                 <div><div className="text-2xl font-bold text-slate-800">{teamStats.totalApproved.toFixed(1)}</div><div className="text-xs text-slate-500">Bu Ay Onaylanan Saat</div></div>
+                 <div><div className="text-xl md:text-2xl font-bold text-slate-800">{teamStats.totalApproved.toFixed(1)}</div><div className="text-xs text-slate-500">Bu Ay Onaylanan Saat</div></div>
               </div>
            </div>
 
            {/* PENDING APPROVALS */}
            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-             <div className="p-4 bg-orange-50 font-bold text-orange-800 border-b border-orange-100 flex items-center gap-2"><AlertCircle size={18}/> Onay Bekleyenler ({pending.length})</div>
-             <table className="w-full text-sm text-left text-slate-600">
-               <thead className="bg-slate-50 text-slate-500 uppercase text-xs"><tr><th className="px-6 py-3">Personel</th><th className="px-6 py-3">Tarih</th><th className="px-6 py-3">Saat</th><th className="px-6 py-3">Açıklama</th><th className="px-6 py-3 text-center">İşlem</th></tr></thead>
+             <div className="p-4 bg-orange-50 font-bold text-orange-800 border-b border-orange-100 flex items-center gap-2 text-sm md:text-base"><AlertCircle size={18}/> Onay Bekleyenler ({pending.length})</div>
+             <div className="overflow-x-auto">
+             <table className="w-full text-sm text-left text-slate-600 whitespace-nowrap">
+               <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] md:text-xs"><tr><th className="px-4 py-3 md:px-6">Personel</th><th className="px-4 py-3 md:px-6">Tarih</th><th className="px-4 py-3 md:px-6">Saat</th><th className="px-4 py-3 md:px-6">Açıklama</th><th className="px-4 py-3 md:px-6 text-center">İşlem</th></tr></thead>
                <tbody className="divide-y divide-slate-100">
-                 {pending.length === 0 ? <tr><td colSpan={5} className="text-center py-8 text-slate-400">Bekleyen talep yok, her şey yolunda! 👍</td></tr> : pending.map(i => (
-                   <tr key={i.id}><td className="px-6 py-4 font-bold">{i.isim}</td><td className="px-6 py-4">{i.tarih}</td><td className="px-6 py-4">{i.baslangic}-{i.bitis}</td><td className="px-6 py-4">{i.neden}</td><td className="px-6 py-4 flex justify-center gap-2"><button onClick={()=>approve(i.id)} className="bg-green-100 hover:bg-green-200 text-green-700 px-3 py-1 rounded font-bold transition-colors">Onayla</button><button onClick={()=>setRejectModal({isOpen:true, itemId: i.id, reason: ''})} className="bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1 rounded font-bold transition-colors">Reddet</button></td></tr>
+                 {pending.length === 0 ? <tr><td colSpan={5} className="text-center py-8 text-slate-400 text-sm">Bekleyen talep yok, her şey yolunda! 👍</td></tr> : pending.map(i => (
+                   <tr key={i.id}><td className="px-4 py-4 md:px-6 font-bold">{i.isim}</td><td className="px-4 py-4 md:px-6">{i.tarih}</td><td className="px-4 py-4 md:px-6">{i.baslangic}-{i.bitis}</td><td className="px-4 py-4 md:px-6">{i.neden}</td><td className="px-4 py-4 md:px-6 flex justify-center gap-2"><button onClick={()=>approve(i.id)} className="bg-green-100 hover:bg-green-200 text-green-700 px-3 py-1 rounded font-bold transition-colors text-xs md:text-sm">Onayla</button><button onClick={()=>setRejectModal({isOpen:true, itemId: i.id, reason: ''})} className="bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1 rounded font-bold transition-colors text-xs md:text-sm">Reddet</button></td></tr>
                  ))}
                </tbody>
              </table>
+             </div>
            </div>
 
            {/* HISTORY WITH FILTERS */}
            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-             <div className="p-4 bg-slate-50 border-b flex flex-col sm:flex-row justify-between items-center gap-4">
-                 <div className="font-bold text-slate-700 flex items-center gap-2"><Database size={18}/> Ekip Geçmişi</div>
-                 <div className="flex gap-2">
-                    <select value={filterPerson} onChange={e => setFilterPerson(e.target.value)} className="text-sm p-2 border rounded-lg bg-white"><option value="Tümü">Tüm Personel</option>{teamStats.teamMembers.map(m => <option key={m} value={m}>{m}</option>)}</select>
-                    <select value={filterMonth} onChange={e => setFilterMonth(e.target.value)} className="text-sm p-2 border rounded-lg bg-white"><option value="Tümü">Tüm Dönemler</option>{DONEMLER.map(d => <option key={d} value={d}>{d}</option>)}</select>
+             <div className="p-4 bg-slate-50 border-b flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                 <div className="font-bold text-slate-700 flex items-center gap-2 text-sm md:text-base"><Database size={18}/> Ekip Geçmişi</div>
+                 <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+                    <select value={filterPerson} onChange={e => setFilterPerson(e.target.value)} className="text-sm p-2 border rounded-lg bg-white w-full sm:w-auto"><option value="Tümü">Tüm Personel</option>{teamStats.teamMembers.map(m => <option key={m} value={m}>{m}</option>)}</select>
+                    <select value={filterMonth} onChange={e => setFilterMonth(e.target.value)} className="text-sm p-2 border rounded-lg bg-white w-full sm:w-auto"><option value="Tümü">Tüm Dönemler</option>{DONEMLER.map(d => <option key={d} value={d}>{d}</option>)}</select>
                  </div>
              </div>
-             <div className="max-h-[400px] overflow-y-auto">
-             <table className="w-full text-sm text-left text-slate-600">
-               <thead className="bg-slate-50 text-slate-500 uppercase text-xs sticky top-0"><tr><th className="px-6 py-3">Durum</th><th className="px-6 py-3">Personel</th><th className="px-6 py-3">Tarih</th><th className="px-6 py-3">Saat</th><th className="px-6 py-3">Açıklama</th></tr></thead>
+             <div className="max-h-[400px] overflow-y-auto overflow-x-auto">
+             <table className="w-full text-sm text-left text-slate-600 whitespace-nowrap">
+               <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] md:text-xs sticky top-0"><tr><th className="px-4 py-3 md:px-6">Durum</th><th className="px-4 py-3 md:px-6">Personel</th><th className="px-4 py-3 md:px-6">Tarih</th><th className="px-4 py-3 md:px-6">Saat</th><th className="px-4 py-3 md:px-6">Açıklama</th></tr></thead>
                <tbody className="divide-y divide-slate-100">
-                 {historyFiltered.length === 0 ? <tr><td colSpan={5} className="text-center py-8 text-slate-400">Kayıt bulunamadı.</td></tr> : historyFiltered.map(i => (<tr key={i.id}><td className="px-6 py-4"><StatusBadge status={i.durum}/></td><td className="px-6 py-4 font-bold">{i.isim}</td><td className="px-6 py-4">{i.tarih}</td><td className="px-6 py-4 text-xs font-mono">{i.baslangic}-{i.bitis} <span className="text-slate-400">({Math.max(0, calculateHours(i.baslangic, i.bitis))}s)</span></td><td className="px-6 py-4">{i.neden}</td></tr>))}
+                 {historyFiltered.length === 0 ? <tr><td colSpan={5} className="text-center py-8 text-slate-400">Kayıt bulunamadı.</td></tr> : historyFiltered.map(i => (<tr key={i.id}><td className="px-4 py-4 md:px-6"><StatusBadge status={i.durum}/></td><td className="px-4 py-4 md:px-6 font-bold">{i.isim}</td><td className="px-4 py-4 md:px-6">{i.tarih}</td><td className="px-4 py-4 md:px-6 text-xs font-mono">{i.baslangic}-{i.bitis} <span className="text-slate-400">({Math.max(0, calculateHours(i.baslangic, i.bitis))}s)</span></td><td className="px-4 py-4 md:px-6">{i.neden}</td></tr>))}
                </tbody>
              </table>
              </div>
@@ -509,8 +514,8 @@ const TeamLeadPage = ({ currentUser, database, onUpdateDatabase, onSaveToDatabas
 
       {activeTab === 'personal' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-in fade-in slide-in-from-bottom-2">
-          <div className="lg:col-span-1 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit space-y-4 border-l-4 border-l-blue-600">
-             <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2"><UserPlus className="text-blue-600"/> Şahsi Giriş Paneli</h2>
+          <div className="lg:col-span-1 bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-200 h-fit space-y-4 border-l-4 border-l-blue-600">
+             <h2 className="text-base md:text-lg font-bold text-slate-800 flex items-center gap-2"><UserPlus className="text-blue-600"/> Şahsi Giriş Paneli</h2>
              <div className="p-3 bg-blue-50 text-blue-800 text-xs rounded-lg mb-4">
                 <strong>Bilgi:</strong> Takım Lideri olarak girdiğiniz kayıtlar <u>otomatik olarak onaylanacaktır</u>.
              </div>
@@ -519,27 +524,27 @@ const TeamLeadPage = ({ currentUser, database, onUpdateDatabase, onSaveToDatabas
              <input type="date" name="tarih" value={formData.tarih} onChange={handleInputChange} className={inputClass} />
              <div className="grid grid-cols-2 gap-3"><input type="time" name="baslangic" value={formData.baslangic} onChange={handleInputChange} className={inputClass}/><input type="time" name="bitis" value={formData.bitis} onChange={handleInputChange} className={inputClass}/></div>
              <textarea name="neden" value={formData.neden} onChange={handleInputChange} rows={3} className={inputClass} placeholder="Açıklama..."></textarea>
-             <button onClick={handleAddToList} className="w-full bg-blue-600 text-white py-3.5 rounded-xl font-medium hover:bg-blue-700 transition flex items-center justify-center gap-2"><Plus size={18}/> Oto-Onaylı Ekle</button>
+             <button onClick={handleAddToList} className="w-full bg-blue-600 text-white py-3.5 rounded-xl font-medium hover:bg-blue-700 transition flex items-center justify-center gap-2 text-sm md:text-base"><Plus size={18}/> Oto-Onaylı Ekle</button>
           </div>
           <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col">
-            <div className="p-4 border-b bg-slate-50 flex justify-between"><h3 className="font-bold text-slate-700">Kaydedilecek Listesi</h3><span className="text-xs bg-white px-2 py-1 rounded border">{stagingList.length}</span></div>
-            <div className="flex-1 p-4 space-y-3 min-h-[300px]">
+            <div className="p-4 border-b bg-slate-50 flex justify-between items-center"><h3 className="font-bold text-slate-700 text-sm md:text-base">Kaydedilecek Listesi</h3><span className="text-xs bg-white px-2 py-1 rounded border">{stagingList.length}</span></div>
+            <div className="flex-1 p-4 space-y-3 min-h-[200px] md:min-h-[300px]">
               {stagingList.map(item => (
                 <div key={item.id} className="flex justify-between p-4 bg-white rounded-xl border border-slate-200 shadow-sm relative group">
                   <div>
-                      <div className="font-bold text-slate-800 flex items-center gap-2">{item.tarih} <span className="text-xs bg-green-100 text-green-700 px-2 rounded-full">Otomatik Onay</span></div>
-                      <div className="text-sm text-slate-600">{item.neden} ({item.baslangic}-{item.bitis})</div>
+                      <div className="font-bold text-slate-800 flex items-center gap-2 text-sm md:text-base">{item.tarih} <span className="text-[10px] bg-green-100 text-green-700 px-2 rounded-full">Otomatik Onay</span></div>
+                      <div className="text-xs md:text-sm text-slate-600">{item.neden} ({item.baslangic}-{item.bitis})</div>
                   </div>
-                  <button onClick={() => setStagingList(stagingList.filter(i => i.id !== item.id))} className="text-slate-300 hover:text-red-500"><Trash2 size={18}/></button>
+                  <button onClick={() => setStagingList(stagingList.filter(i => i.id !== item.id))} className="text-slate-300 hover:text-red-500 p-2"><Trash2 size={18}/></button>
                 </div>
               ))}
             </div>
-            <div className="p-4 border-t bg-slate-50"><button onClick={handleSend} disabled={stagingList.length === 0} className="w-full bg-green-600 disabled:bg-slate-300 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2"><Save size={18}/> KAYDET VE BİTİR</button></div>
+            <div className="p-4 border-t bg-slate-50"><button onClick={handleSend} disabled={stagingList.length === 0} className="w-full bg-green-600 disabled:bg-slate-300 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-sm md:text-base"><Save size={18}/> KAYDET VE BİTİR</button></div>
           </div>
         </div>
       )}
       
-      {rejectModal.isOpen && <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"><div className="bg-white p-6 rounded-2xl w-96"><h3 className="font-bold mb-2 text-red-600">Reddet</h3><textarea value={rejectModal.reason} onChange={e=>setRejectModal({...rejectModal, reason: e.target.value})} className="w-full border p-2 rounded" rows={3} placeholder="Sebep..."></textarea><div className="flex justify-end gap-2 mt-4"><button onClick={()=>setRejectModal({isOpen:false, itemId:null, reason:''})} className="px-4 py-2">İptal</button><button onClick={reject} className="bg-red-600 text-white px-4 py-2 rounded">Reddet</button></div></div></div>}
+      {rejectModal.isOpen && <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"><div className="bg-white p-6 rounded-2xl w-full max-w-sm"><h3 className="font-bold mb-2 text-red-600 text-lg">Reddet</h3><textarea value={rejectModal.reason} onChange={e=>setRejectModal({...rejectModal, reason: e.target.value})} className="w-full border p-2 rounded text-sm" rows={3} placeholder="Sebep..."></textarea><div className="flex justify-end gap-2 mt-4"><button onClick={()=>setRejectModal({isOpen:false, itemId:null, reason:''})} className="px-4 py-2 text-sm">İptal</button><button onClick={reject} className="bg-red-600 text-white px-4 py-2 rounded text-sm font-bold">Reddet</button></div></div></div>}
     </div>
   );
 };
@@ -637,16 +642,16 @@ const AdminPage = ({ database, onUpdateDatabase, users, setUsers }: { database: 
   return (
     <div className="space-y-6">
        {/* TAB NAVIGATION */}
-       <div className="flex gap-1 bg-slate-100 p-1 rounded-xl w-fit">
-          <button onClick={() => setTab('report')} className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${tab === 'report' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><PieChart size={16}/> Raporlar</button>
-          <button onClick={() => setTab('db')} className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${tab === 'db' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><Database size={16}/> Veritabanı</button>
-          <button onClick={() => setTab('users')} className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${tab === 'users' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><Users size={16}/> Kullanıcılar</button>
+       <div className="flex gap-1 bg-slate-100 p-1 rounded-xl w-full sm:w-fit overflow-x-auto">
+          <button onClick={() => setTab('report')} className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-bold flex justify-center items-center gap-2 transition-all whitespace-nowrap ${tab === 'report' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><PieChart size={16}/> Raporlar</button>
+          <button onClick={() => setTab('db')} className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-bold flex justify-center items-center gap-2 transition-all whitespace-nowrap ${tab === 'db' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><Database size={16}/> Veritabanı</button>
+          <button onClick={() => setTab('users')} className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-bold flex justify-center items-center gap-2 transition-all whitespace-nowrap ${tab === 'users' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><Users size={16}/> Kullanıcılar</button>
        </div>
        
        {/* --- RAPORLAR TAB --- */}
        {tab === 'report' && (
          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                   <div className="flex justify-between items-start mb-4"><div className="p-2 bg-blue-50 rounded-lg text-blue-600"><Clock size={24}/></div><span className="text-xs font-bold bg-green-100 text-green-700 px-2 py-1 rounded">Onaylı</span></div>
                   <div className="text-3xl font-bold text-slate-800">{stats.approvedHours.toFixed(1)}</div>
@@ -670,7 +675,7 @@ const AdminPage = ({ database, onUpdateDatabase, users, setUsers }: { database: 
             </div>
 
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-               <h3 className="font-bold text-slate-700 mb-6">Departman Bazlı Mesai Dağılımı (Saat)</h3>
+               <h3 className="font-bold text-slate-700 mb-6 text-lg">Departman Bazlı Mesai Dağılımı (Saat)</h3>
                <div className="space-y-4">
                   {stats.deptStats.map(d => (
                     <div key={d.name}>
@@ -687,11 +692,11 @@ const AdminPage = ({ database, onUpdateDatabase, users, setUsers }: { database: 
        {tab === 'db' && (
          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden animate-in fade-in">
             <div className="p-4 bg-slate-50 border-b space-y-4">
-               <div className="flex flex-col md:flex-row justify-between gap-4 items-center">
-                  <span className="font-bold flex items-center gap-2"><Database size={18}/> Kayıt Yönetimi ({filteredDB.length})</span>
-                  <button onClick={()=>exportToCSV(database)} className="text-sm bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-bold flex gap-2 items-center transition-all"><Download size={16}/> Excel İndir</button>
+               <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
+                  <span className="font-bold flex items-center gap-2 text-sm md:text-base"><Database size={18}/> Kayıt Yönetimi ({filteredDB.length})</span>
+                  <button onClick={()=>exportToCSV(database)} className="text-sm bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-bold flex gap-2 items-center transition-all w-full sm:w-auto justify-center"><Download size={16}/> Excel İndir</button>
                </div>
-               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div className="relative"><Search className="absolute left-3 top-2.5 text-slate-400" size={16}/><input type="text" placeholder="İsim veya Açıklama Ara..." value={filterText} onChange={e => setFilterText(e.target.value)} className="w-full pl-9 p-2 border rounded-lg text-sm"/></div>
                   <select value={filterMonth} onChange={e => setFilterMonth(e.target.value)} className="p-2 border rounded-lg text-sm bg-white"><option value="Tümü">Tüm Dönemler</option>{DONEMLER.map(d => <option key={d} value={d}>{d}</option>)}</select>
                   <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="p-2 border rounded-lg text-sm bg-white"><option value="Tümü">Tüm Durumlar</option><option value="bekliyor">Bekliyor</option><option value="onaylandi">Onaylandı</option><option value="reddedildi">Reddedildi</option></select>
@@ -699,20 +704,20 @@ const AdminPage = ({ database, onUpdateDatabase, users, setUsers }: { database: 
                </div>
             </div>
             <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-slate-600">
-               <thead className="bg-slate-50 text-slate-500 uppercase text-xs"><tr><th className="px-6 py-3">Durum</th><th className="px-6 py-3">Personel</th><th className="px-6 py-3">Tarih</th><th className="px-6 py-3">Saat</th><th className="px-6 py-3">Tür</th><th className="px-6 py-3">İşlem</th></tr></thead>
+            <table className="w-full text-sm text-left text-slate-600 whitespace-nowrap">
+               <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] md:text-xs"><tr><th className="px-4 py-3 md:px-6">Durum</th><th className="px-4 py-3 md:px-6">Personel</th><th className="px-4 py-3 md:px-6">Tarih</th><th className="px-4 py-3 md:px-6">Saat</th><th className="px-4 py-3 md:px-6">Tür</th><th className="px-4 py-3 md:px-6">İşlem</th></tr></thead>
                <tbody className="divide-y divide-slate-100">
                  {filteredDB.map(i => (
                     <tr key={i.id} className="hover:bg-slate-50">
-                       <td className="px-6 py-4"><StatusBadge status={i.durum}/></td>
-                       <td className="px-6 py-4">
+                       <td className="px-4 py-4 md:px-6"><StatusBadge status={i.durum}/></td>
+                       <td className="px-4 py-4 md:px-6">
                           <div className="font-bold text-slate-800">{i.isim}</div>
                           <div className="text-xs text-slate-400">{i.kaydeden}</div>
                        </td>
-                       <td className="px-6 py-4">{i.tarih}</td>
-                       <td className="px-6 py-4">{i.baslangic} - {i.bitis}</td>
-                       <td className="px-6 py-4"><span className="bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs border border-slate-200">{i.mesaiTuru} (x{i.carpan})</span></td>
-                       <td className="px-6 py-4 flex gap-2">
+                       <td className="px-4 py-4 md:px-6">{i.tarih}</td>
+                       <td className="px-4 py-4 md:px-6">{i.baslangic} - {i.bitis}</td>
+                       <td className="px-4 py-4 md:px-6"><span className="bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs border border-slate-200">{i.mesaiTuru} (x{i.carpan})</span></td>
+                       <td className="px-4 py-4 md:px-6 flex gap-2">
                           <button onClick={() => setAdminEditItem(i)} className="p-2 text-blue-600 hover:bg-blue-50 rounded"><Edit3 size={16}/></button>
                           <button onClick={() => handleDeleteItem(i.id)} className="p-2 text-red-600 hover:bg-red-50 rounded"><Trash2 size={16}/></button>
                        </td>
@@ -728,24 +733,25 @@ const AdminPage = ({ database, onUpdateDatabase, users, setUsers }: { database: 
        {tab === 'users' && (
          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden animate-in fade-in">
             <div className="p-4 bg-slate-50 border-b flex justify-between items-center">
-               <span className="font-bold flex items-center gap-2"><Users size={18}/> Sistem Kullanıcıları</span>
-               <button onClick={() => setUserEditModal({isOpen: true, isNew: true, user: {id: "", name:"", username:"", role:"user", department:""}})} className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 flex items-center gap-2"><Plus size={16}/> Yeni Kullanıcı</button>
+               <span className="font-bold flex items-center gap-2 text-sm md:text-base"><Users size={18}/> Sistem Kullanıcıları</span>
+               <button onClick={() => setUserEditModal({isOpen: true, isNew: true, user: {id: "", name:"", username:"", role:"user", department:""}})} className="bg-blue-600 text-white px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold hover:bg-blue-700 flex items-center gap-2"><Plus size={16}/> <span className="hidden sm:inline">Yeni Kullanıcı</span><span className="sm:hidden">Ekle</span></button>
             </div>
-            <table className="w-full text-sm text-left text-slate-600">
-               <thead className="bg-slate-50 text-slate-500 uppercase text-xs"><tr><th className="px-6 py-3">İsim</th><th className="px-6 py-3">Email</th><th className="px-6 py-3">Rol</th><th className="px-6 py-3">Bağlı Olduğu Lider</th><th className="px-6 py-3">İşlem</th></tr></thead>
+            <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left text-slate-600 whitespace-nowrap">
+               <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] md:text-xs"><tr><th className="px-4 py-3 md:px-6">İsim</th><th className="px-4 py-3 md:px-6">Email</th><th className="px-4 py-3 md:px-6">Rol</th><th className="px-4 py-3 md:px-6">Bağlı Olduğu Lider</th><th className="px-4 py-3 md:px-6">İşlem</th></tr></thead>
                <tbody className="divide-y divide-slate-100">
                   {users.map(u => (
                      <tr key={u.id}>
-                        <td className="px-6 py-4 font-bold">{u.name}</td><td className="px-6 py-4">{u.username}</td>
-                        <td className="px-6 py-4"><span className={`px-2 py-1 rounded text-xs font-bold uppercase ${u.role === 'admin' ? 'bg-purple-100 text-purple-700' : u.role === 'team_lead' ? 'bg-orange-100 text-orange-700' : 'bg-blue-50 text-blue-700'}`}>{u.role}</span></td>
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-4 md:px-6 font-bold">{u.name}</td><td className="px-4 py-4 md:px-6">{u.username}</td>
+                        <td className="px-4 py-4 md:px-6"><span className={`px-2 py-1 rounded text-xs font-bold uppercase ${u.role === 'admin' ? 'bg-purple-100 text-purple-700' : u.role === 'team_lead' ? 'bg-orange-100 text-orange-700' : 'bg-blue-50 text-blue-700'}`}>{u.role}</span></td>
+                        <td className="px-4 py-4 md:px-6">
                             {u.role === 'user' ? (
                                 u.manager ? <div className="flex items-center gap-1 text-slate-800"><GitBranch size={14} className="text-slate-400"/> {getManagerName(u.manager)}</div> : <span className="text-red-400 text-xs italic">Yönetici Atanmadı</span>
                             ) : (
                                 <span className="text-slate-300">-</span>
                             )}
                         </td>
-                        <td className="px-6 py-4 flex gap-2">
+                        <td className="px-4 py-4 md:px-6 flex gap-2">
                            <button onClick={()=>setUserEditModal({isOpen: true, isNew: false, user: u})} className="p-2 text-blue-600 hover:bg-blue-50 rounded"><Edit3 size={16}/></button>
                            {u.role !== 'admin' && <button onClick={()=>handleUserDelete(u.id)} className="p-2 text-red-600 hover:bg-red-50 rounded"><Trash2 size={16}/></button>}
                         </td>
@@ -753,12 +759,13 @@ const AdminPage = ({ database, onUpdateDatabase, users, setUsers }: { database: 
                   ))}
                </tbody>
             </table>
+            </div>
          </div>
        )}
 
        {/* --- MODAL: ADMIN EDIT RECORD --- */}
        {adminEditItem && (
-         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100] backdrop-blur-sm">
+         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100] backdrop-blur-sm p-4">
             <div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-2xl">
                <div className="flex justify-between items-center mb-6 border-b pb-2">
                   <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2"><ShieldAlert className="text-purple-600"/> Kayıt Düzenle (Admin)</h3>
@@ -767,7 +774,7 @@ const AdminPage = ({ database, onUpdateDatabase, users, setUsers }: { database: 
                <div className="space-y-4">
                   <div>
                     <label className="text-xs font-bold text-slate-500 uppercase">Durum (Zorla Değiştir)</label>
-                    <select value={adminEditItem.durum} onChange={e => setAdminEditItem({...adminEditItem, durum: e.target.value as MesaiDurumu})} className="w-full p-2 border-2 border-purple-100 rounded-lg bg-purple-50 font-bold text-purple-900 focus:outline-none focus:border-purple-500">
+                    <select value={adminEditItem.durum} onChange={e => setAdminEditItem({...adminEditItem,durum: e.target.value as MesaiDurumu})} className="w-full p-2 border-2 border-purple-100 rounded-lg bg-purple-50 font-bold text-purple-900 focus:outline-none focus:border-purple-500">
                        <option value="bekliyor">Bekliyor</option>
                        <option value="onaylandi">ONAYLANDI</option>
                        <option value="reddedildi">REDDEDİLDİ</option>
@@ -787,8 +794,8 @@ const AdminPage = ({ database, onUpdateDatabase, users, setUsers }: { database: 
                   </div>
                </div>
                <div className="flex justify-end gap-3 mt-6">
-                  <button onClick={() => setAdminEditItem(null)} className="px-4 py-2 text-slate-600 font-medium hover:bg-slate-100 rounded-lg">İptal</button>
-                  <button onClick={handleSaveAdminEdit} className="px-4 py-2 bg-purple-600 text-white font-bold rounded-lg hover:bg-purple-700 flex items-center gap-2"><Save size={18}/> Değişiklikleri Kaydet</button>
+                  <button onClick={() => setAdminEditItem(null)} className="px-4 py-2 text-slate-600 font-medium hover:bg-slate-100 rounded-lg text-sm">İptal</button>
+                  <button onClick={handleSaveAdminEdit} className="px-4 py-2 bg-purple-600 text-white font-bold rounded-lg hover:bg-purple-700 flex items-center gap-2 text-sm"><Save size={18}/> Kaydet</button>
                </div>
             </div>
          </div>
@@ -796,7 +803,7 @@ const AdminPage = ({ database, onUpdateDatabase, users, setUsers }: { database: 
 
        {/* --- MODAL: USER EDIT/ADD --- */}
        {userEditModal.isOpen && userEditModal.user && (
-         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100] backdrop-blur-sm">
+         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100] backdrop-blur-sm p-4">
             <div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-2xl">
                <h3 className="font-bold text-lg mb-4">{userEditModal.isNew ? "Yeni Kullanıcı Ekle" : "Kullanıcı Düzenle"}</h3>
                <div className="space-y-3">
@@ -829,11 +836,10 @@ const AdminPage = ({ database, onUpdateDatabase, users, setUsers }: { database: 
                           </select>
                       </div>
                   )}
-                  {/* Eski Takım Alanı - Artık opsiyonel veya gizli olabilir ama veri yapısını bozmamak için tutuyoruz, sadece readonly yapıyoruz veya otomatik dolduruyoruz */}
                </div>
                <div className="flex justify-end gap-3 mt-6">
-                  <button onClick={() => setUserEditModal({isOpen: false, user: null, isNew: false})} className="px-4 py-2 text-slate-600">İptal</button>
-                  <button onClick={() => handleUserSave(userEditModal.user!)} className="px-4 py-2 bg-blue-600 text-white rounded-lg font-bold">Kaydet</button>
+                  <button onClick={() => setUserEditModal({isOpen: false, user: null, isNew: false})} className="px-4 py-2 text-slate-600 text-sm">İptal</button>
+                  <button onClick={() => handleUserSave(userEditModal.user!)} className="px-4 py-2 bg-blue-600 text-white rounded-lg font-bold text-sm">Kaydet</button>
                </div>
             </div>
          </div>
@@ -907,7 +913,7 @@ const MainContent = () => {
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-10">
        <header className="bg-white border-b border-slate-200 sticky top-0 z-[100] shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-             <div className="flex items-center gap-3"><AppLogo size={32}/><div><h1 className="text-lg font-bold text-slate-800">Mesai Takip</h1><p className="text-xs text-slate-400">Kurumsal</p></div></div>
+             <div className="flex items-center gap-3"><AppLogo size={32}/><div><h1 className="text-base md:text-lg font-bold text-slate-800">Mesai Takip</h1><p className="text-[10px] md:text-xs text-slate-400">Kurumsal</p></div></div>
              <div className="flex items-center gap-4">
                 <div className="hidden md:flex flex-col items-end"><span className="text-sm font-bold text-slate-800">{currentUser.name}</span><span className="text-xs text-slate-500">{currentUser.role}</span></div>
                 <button onClick={handleLogout} className="p-2.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl"><LogOut size={20}/></button>
@@ -915,22 +921,22 @@ const MainContent = () => {
           </div>
        </header>
 
-       <main className="max-w-7xl mx-auto mt-8 px-4 sm:px-6 lg:px-8">
+       <main className="max-w-7xl mx-auto mt-6 md:mt-8 px-4 sm:px-6 lg:px-8">
           {currentUser.role === 'user' && (
              <div className="space-y-2">
-                <div className="flex items-center justify-between mb-4"><h2 className="text-2xl font-bold text-slate-800">Merhaba, {currentUser.name.split(' ')[0]} 👋</h2></div>
+                <div className="flex items-center justify-between mb-4"><h2 className="text-xl md:text-2xl font-bold text-slate-800">Merhaba, {currentUser.name.split(' ')[0]} 👋</h2></div>
                 <UserPage currentUser={currentUser} onSaveToDatabase={items => setDatabase([...database, ...items])} onUpdateDatabase={setDatabase} database={database} />
              </div>
           )}
           {currentUser.role === 'team_lead' && (
              <div>
-                <div className="mb-6"><h2 className="text-2xl font-bold text-slate-800">Lider Paneli</h2></div>
+                <div className="mb-6"><h2 className="text-xl md:text-2xl font-bold text-slate-800">Lider Paneli</h2></div>
                 <TeamLeadPage currentUser={currentUser} database={database} onUpdateDatabase={setDatabase} onSaveToDatabase={items => setDatabase([...database, ...items])} users={users} />
              </div>
           )}
           {currentUser.role === 'admin' && (
              <div>
-                <div className="mb-6"><h2 className="text-2xl font-bold text-slate-800">Yönetim Konsolu</h2></div>
+                <div className="mb-6"><h2 className="text-xl md:text-2xl font-bold text-slate-800">Yönetim Konsolu</h2></div>
                 <AdminPage database={database} onUpdateDatabase={setDatabase} users={users} setUsers={setUsers} />
              </div>
           )}
