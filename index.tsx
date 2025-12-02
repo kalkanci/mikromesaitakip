@@ -84,7 +84,7 @@ msalInstance.addEventCallback((event) => {
 
 // --- MICROSOFT GRAPH API SERVİSİ (MERKEZİ VERİTABANI) ---
 
-const ONEDRIVE_FILE_NAME = "MesaiTakip_Data.json"; 
+const ONEDRIVE_FILE_NAME = "MesaiTakip_Data_2025.json"; // Dosya adını 2025 olarak güncelledik
 
 type DriveLocation = {
     driveId: string;
@@ -111,7 +111,6 @@ const GraphService = {
     findDatabaseLocation: async (accessToken: string): Promise<DriveLocation | null> => {
         try {
             // A. Önce "Benimle Paylaşılanlar" klasörüne bak (Personel/Lider için - Kurumsal Link)
-            // Kurumsal link ile paylaşılan dosyalar, kullanıcı bir kez tıkladığında buraya düşer.
             const sharedResponse = await fetch(`https://graph.microsoft.com/v1.0/me/drive/sharedWithMe`, {
                 headers: { Authorization: `Bearer ${accessToken}` }
             });
@@ -266,30 +265,37 @@ const AppLogo = ({ size = 40, className = "" }: { size?: number, className?: str
 
 // --- SABİTLER ---
 
+// 2025 Yılı Dönemleri
 const DONEMLER = [
-  "Ocak 2024", "Şubat 2024", "Mart 2024", "Nisan 2024", 
-  "Mayıs 2024", "Haziran 2024", "Temmuz 2024", "Ağustos 2024",
-  "Eylül 2024", "Ekim 2024", "Kasım 2024", "Aralık 2024"
+  "Ocak 2025", "Şubat 2025", "Mart 2025", "Nisan 2025", 
+  "Mayıs 2025", "Haziran 2025", "Temmuz 2025", "Ağustos 2025",
+  "Eylül 2025", "Ekim 2025", "Kasım 2025", "Aralık 2025"
 ];
 
+// 2025 Resmi Tatiller (Türkiye)
 const RESMI_TATILLER = [
-  "01-01", "04-23", "05-01", "05-19", "07-15", "08-30", "10-29",
-  "2024-04-10", "2024-04-11", "2024-04-12",
-  "2024-06-16", "2024-06-17", "2024-06-18", "2024-06-19",
+  "2025-01-01", // Yılbaşı
+  "2025-03-30", "2025-03-31", "2025-04-01", // Ramazan Bayramı (Tahmini)
+  "2025-04-23", // Ulusal Egemenlik
+  "2025-05-01", // İşçi Bayramı
+  "2025-05-19", // Atatürk'ü Anma
+  "2025-06-06", "2025-06-07", "2025-06-08", "2025-06-09", // Kurban Bayramı (Tahmini)
+  "2025-07-15", // Demokrasi Günü
+  "2025-08-30", // Zafer Bayramı
+  "2025-10-29", // Cumhuriyet Bayramı
 ];
 
-// Başlangıç kullanıcıları (OneDrive boşsa burası kullanılır)
+// Başlangıç kullanıcıları (Sadece dosya yoksa kullanılır)
 const INITIAL_USERS: UserDefinition[] = [
-  { id: "1", username: "ahmet.admin@sirket.com", role: 'admin', name: "Ahmet Yılmaz", department: "Yönetim" },
-  { id: "2", username: "ali.lider@sirket.com", role: 'team_lead', name: "Ali Koç", department: "Yazılım" },
-  { id: "3", username: "mehmet.user@sirket.com", role: 'user', name: "Mehmet Demir", department: "Yazılım", manager: "ali.lider@sirket.com" },
-  { id: "4", username: "ayse.user@sirket.com", role: 'user', name: "Ayşe Kara", department: "Satış", manager: "veli.lider@sirket.com" },
-  { id: "5", username: "veli.lider@sirket.com", role: 'team_lead', name: "Veli Can", department: "Satış" }
+  { id: "1", username: "admin@sirket.com", role: 'admin', name: "Sistem Yöneticisi", department: "IT" },
 ];
 
 const getTodayString = () => {
   const date = new Date();
   const year = date.getFullYear();
+  // Eğer yıl 2025'ten küçükse, varsayılan olarak 2025-01-01 döndür (Test kolaylığı için)
+  if (year < 2025) return "2025-01-01";
+  
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
@@ -301,12 +307,13 @@ const getDayStatus = (dateString: string): { type: MesaiTuru, label: string, col
   if (!dateString) return { type: 'Normal', label: 'Normal Mesai', color: 'bg-slate-100 text-slate-600', carpan: 1.0 };
   const date = new Date(dateString);
   const dayOfWeek = date.getDay();
-  const formattedDate = dateString;
-  const monthDay = dateString.slice(5);
-
-  if (RESMI_TATILLER.includes(monthDay) || RESMI_TATILLER.includes(formattedDate)) {
+  
+  // Resmi Tatil Kontrolü (Tam tarih eşleşmesi)
+  if (RESMI_TATILLER.includes(dateString)) {
     return { type: 'Resmi Tatil', label: 'Resmi Tatil', color: 'bg-red-100 text-red-700 border-red-200', carpan: 2.0 };
   }
+  
+  // Pazar Günü Kontrolü
   if (dayOfWeek === 0) {
     return { type: 'Hafta Sonu', label: 'Hafta Sonu', color: 'bg-orange-100 text-orange-700 border-orange-200', carpan: 1.5 };
   }
@@ -376,11 +383,23 @@ const Toast = ({ message, type, onClose }: { message: string, type: 'success' | 
   );
 };
 
-// --- SAYFALAR (UserPage ve TeamLeadPage aynı, AdminPage Güncellendi) ---
+// --- SAYFALAR ---
 
 const MicrosoftLoginPage = ({ onDemoLogin }: { onDemoLogin: (userIndex: number) => void }) => {
   const { instance } = useMsal();
   const [error, setError] = useState("");
+  const [clickCount, setClickCount] = useState(0);
+  const [showSecretDemo, setShowSecretDemo] = useState(false);
+
+  // Logo'ya 3 kez tıklayınca demo panelini aç
+  const handleLogoClick = () => {
+    const newCount = clickCount + 1;
+    setClickCount(newCount);
+    if (newCount >= 3) {
+      setShowSecretDemo(true);
+      setClickCount(0);
+    }
+  };
 
   const handleLogin = async () => {
     try {
@@ -390,16 +409,20 @@ const MicrosoftLoginPage = ({ onDemoLogin }: { onDemoLogin: (userIndex: number) 
       if (e.errorCode === 'user_cancelled') {
         setError("Giriş işlemi iptal edildi.");
       } else {
-        setError("Azure ID Hatası: 'YOUR_CLIENT_ID_HERE' geçerli bir ID değil. Lütfen aşağıdaki Demo butonlarını kullanın.");
+        setError("Azure Bağlantı Hatası: Lütfen Client ID ve Redirect URI ayarlarınızı kontrol edin.");
       }
     }
   };
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
-      <div className="bg-white p-6 md:p-10 rounded-3xl shadow-2xl w-full max-w-sm border border-slate-200 text-center relative overflow-hidden">
+      <div className="bg-white p-6 md:p-10 rounded-3xl shadow-2xl w-full max-w-sm border border-slate-200 text-center relative overflow-hidden transition-all duration-500">
         <div className="flex justify-center mb-6">
-          <div className="bg-blue-50 p-4 rounded-3xl">
+          <div 
+            className="bg-blue-50 p-4 rounded-3xl cursor-pointer hover:bg-blue-100 transition-colors active:scale-95" 
+            onClick={handleLogoClick}
+            title="Sistem Girişi"
+          >
              <AppLogo size={64} />
           </div>
         </div>
@@ -411,39 +434,41 @@ const MicrosoftLoginPage = ({ onDemoLogin }: { onDemoLogin: (userIndex: number) 
           <span className="font-semibold text-sm md:text-base">Microsoft ile Giriş Yap</span>
         </button>
 
-        <div className="relative mb-6">
-            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200"></div></div>
-            <div className="relative flex justify-center text-[10px] md:text-xs uppercase"><span className="bg-white px-2 text-slate-400">Veya Demo Seçin</span></div>
-        </div>
+        {/* GİZLİ DEMO ALANI */}
+        {showSecretDemo && (
+            <div className="animate-in fade-in slide-in-from-top-4 duration-300">
+                <div className="relative mb-6">
+                    <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200"></div></div>
+                    <div className="relative flex justify-center text-[10px] md:text-xs uppercase"><span className="bg-white px-2 text-slate-400 font-bold text-red-400">GELİŞTİRİCİ MODU (DEMO)</span></div>
+                </div>
 
-        <div className="grid grid-cols-1 gap-3">
-             <button onClick={() => onDemoLogin(2)} className="group flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition-all bg-white">
-                 <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600"><User size={18} className="md:w-5 md:h-5"/></div>
-                    <div className="text-left"><div className="font-bold text-slate-700 group-hover:text-blue-700 text-xs md:text-sm">Personel</div><div className="text-[10px] text-slate-400">Mehmet Demir</div></div>
-                 </div>
-                 <div className="text-slate-300 group-hover:text-blue-500"><TrendingUp size={16}/></div>
-             </button>
+                <div className="grid grid-cols-1 gap-3">
+                    <button onClick={() => onDemoLogin(2)} className="group flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition-all bg-white">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600"><User size={18} className="md:w-5 md:h-5"/></div>
+                            <div className="text-left"><div className="font-bold text-slate-700 group-hover:text-blue-700 text-xs md:text-sm">Personel</div><div className="text-[10px] text-slate-400">Demo Hesabı</div></div>
+                        </div>
+                    </button>
 
-             <button onClick={() => onDemoLogin(1)} className="group flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-orange-500 hover:bg-orange-50 transition-all bg-white">
-                 <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600"><BriefcaseIcon size={18} className="md:w-5 md:h-5"/></div>
-                    <div className="text-left"><div className="font-bold text-slate-700 group-hover:text-orange-700 text-xs md:text-sm">Takım Lideri</div><div className="text-[10px] text-slate-400">Ali Koç</div></div>
-                 </div>
-                 <div className="text-slate-300 group-hover:text-orange-500"><Users size={16}/></div>
-             </button>
+                    <button onClick={() => onDemoLogin(1)} className="group flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-orange-500 hover:bg-orange-50 transition-all bg-white">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600"><BriefcaseIcon size={18} className="md:w-5 md:h-5"/></div>
+                            <div className="text-left"><div className="font-bold text-slate-700 group-hover:text-orange-700 text-xs md:text-sm">Takım Lideri</div><div className="text-[10px] text-slate-400">Demo Hesabı</div></div>
+                        </div>
+                    </button>
 
-             <button onClick={() => onDemoLogin(0)} className="group flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-purple-500 hover:bg-purple-50 transition-all bg-white">
-                 <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600"><Crown size={18} className="md:w-5 md:h-5"/></div>
-                    <div className="text-left"><div className="font-bold text-slate-700 group-hover:text-purple-700 text-xs md:text-sm">Admin</div><div className="text-[10px] text-slate-400">Ahmet Yılmaz</div></div>
-                 </div>
-                 <div className="text-slate-300 group-hover:text-purple-500"><UserCog size={16}/></div>
-             </button>
-        </div>
+                    <button onClick={() => onDemoLogin(0)} className="group flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-purple-500 hover:bg-purple-50 transition-all bg-white">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600"><Crown size={18} className="md:w-5 md:h-5"/></div>
+                            <div className="text-left"><div className="font-bold text-slate-700 group-hover:text-purple-700 text-xs md:text-sm">Admin</div><div className="text-[10px] text-slate-400">Demo Hesabı</div></div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        )}
 
         {error && <div className="mt-6 p-3 bg-red-50 text-red-600 text-xs rounded-lg flex items-start gap-2 text-left"><AlertCircle size={16} className="shrink-0 mt-0.5"/><span>{error}</span></div>}
-        <div className="mt-8 pt-6 border-t border-slate-100"><p className="text-[10px] text-slate-400">Powered by Microsoft Entra ID</p></div>
+        <div className="mt-8 pt-6 border-t border-slate-100"><p className="text-[10px] text-slate-400">v2.5.0 - 2025 Edition</p></div>
       </div>
     </div>
   );
@@ -498,7 +523,7 @@ const UserPage = ({ currentUser, onSaveToDatabase, onUpdateDatabase, database }:
              <h2 className="text-base md:text-lg font-bold text-slate-800 flex items-center gap-2"><Plus className="text-blue-600"/> Giriş Paneli</h2>
              <select name="donem" value={formData.donem} onChange={handleInputChange} className={inputClass}>{DONEMLER.map(d => <option key={d} value={d}>{d}</option>)}</select>
              <input type="text" value={formData.isim} readOnly className={`${inputClass} bg-slate-50 font-semibold`} />
-             <input type="date" name="tarih" value={formData.tarih} onChange={handleInputChange} className={inputClass} />
+             <input type="date" name="tarih" min="2025-01-01" value={formData.tarih} onChange={handleInputChange} className={inputClass} />
              <div className="grid grid-cols-2 gap-3"><input type="time" name="baslangic" value={formData.baslangic} onChange={handleInputChange} className={inputClass}/><input type="time" name="bitis" value={formData.bitis} onChange={handleInputChange} className={inputClass}/></div>
              <textarea name="neden" value={formData.neden} onChange={handleInputChange} rows={3} className={inputClass} placeholder="Açıklama..."></textarea>
              <button onClick={handleAddToList} className="w-full bg-blue-600 text-white py-3.5 rounded-xl font-medium hover:bg-blue-700 transition flex items-center justify-center gap-2 text-sm md:text-base"><Plus size={18}/> Ekle</button>
@@ -536,7 +561,7 @@ const UserPage = ({ currentUser, onSaveToDatabase, onUpdateDatabase, database }:
           </div>
         </div>
       )}
-      {editItem && <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"><div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-2xl"><h3 className="font-bold mb-4 text-lg">Düzenle</h3><input type="date" value={editItem.tarih} onChange={e => setEditItem({...editItem, tarih: e.target.value})} className={inputClass + " mb-2"}/><div className="flex gap-2 mb-2"><input type="time" value={editItem.baslangic} onChange={e=>setEditItem({...editItem, baslangic: e.target.value})} className={inputClass}/><input type="time" value={editItem.bitis} onChange={e=>setEditItem({...editItem, bitis: e.target.value})} className={inputClass}/></div><textarea value={editItem.neden} onChange={e=>setEditItem({...editItem, neden: e.target.value})} className={inputClass} rows={3}></textarea><div className="flex justify-end gap-2 mt-4"><button onClick={()=>setEditItem(null)} className="px-4 py-2 text-sm text-slate-600">İptal</button><button onClick={saveEdit} className="bg-blue-600 text-white px-4 py-2 rounded text-sm font-bold">Kaydet</button></div></div></div>}
+      {editItem && <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"><div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-2xl"><h3 className="font-bold mb-4 text-lg">Düzenle</h3><input type="date" value={editItem.tarih} min="2025-01-01" onChange={e => setEditItem({...editItem, tarih: e.target.value})} className={inputClass + " mb-2"}/><div className="flex gap-2 mb-2"><input type="time" value={editItem.baslangic} onChange={e=>setEditItem({...editItem, baslangic: e.target.value})} className={inputClass}/><input type="time" value={editItem.bitis} onChange={e=>setEditItem({...editItem, bitis: e.target.value})} className={inputClass}/></div><textarea value={editItem.neden} onChange={e=>setEditItem({...editItem, neden: e.target.value})} className={inputClass} rows={3}></textarea><div className="flex justify-end gap-2 mt-4"><button onClick={()=>setEditItem(null)} className="px-4 py-2 text-sm text-slate-600">İptal</button><button onClick={saveEdit} className="bg-blue-600 text-white px-4 py-2 rounded text-sm font-bold">Kaydet</button></div></div></div>}
       {deleteId && <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"><div className="bg-white p-6 rounded-2xl w-full max-w-sm shadow-2xl"><p className="mb-4 text-lg font-medium text-slate-800">Emin misiniz?</p><div className="flex gap-2"><button onClick={()=>setDeleteId(null)} className="flex-1 py-3 bg-slate-100 rounded-lg text-slate-600 font-medium">Vazgeç</button><button onClick={confirmDelete} className="flex-1 py-3 bg-red-600 text-white rounded-lg font-bold">Sil</button></div></div></div>}
     </div>
   );
@@ -666,7 +691,7 @@ const TeamLeadPage = ({ currentUser, database, onUpdateDatabase, onSaveToDatabas
              </div>
              <select name="donem" value={formData.donem} onChange={handleInputChange} className={inputClass}>{DONEMLER.map(d => <option key={d} value={d}>{d}</option>)}</select>
              <input type="text" value={formData.isim} readOnly className={`${inputClass} bg-slate-50 font-semibold`} />
-             <input type="date" name="tarih" value={formData.tarih} onChange={handleInputChange} className={inputClass} />
+             <input type="date" name="tarih" min="2025-01-01" value={formData.tarih} onChange={handleInputChange} className={inputClass} />
              <div className="grid grid-cols-2 gap-3"><input type="time" name="baslangic" value={formData.baslangic} onChange={handleInputChange} className={inputClass}/><input type="time" name="bitis" value={formData.bitis} onChange={handleInputChange} className={inputClass}/></div>
              <textarea name="neden" value={formData.neden} onChange={handleInputChange} rows={3} className={inputClass} placeholder="Açıklama..."></textarea>
              <button onClick={handleAddToList} className="w-full bg-blue-600 text-white py-3.5 rounded-xl font-medium hover:bg-blue-700 transition flex items-center justify-center gap-2 text-sm md:text-base"><Plus size={18}/> Oto-Onaylı Ekle</button>
@@ -1032,7 +1057,7 @@ const AdminPage = ({ database, onUpdateDatabase, users, setUsers, fileLocation }
                     </select>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
-                     <div><label className="text-xs text-slate-500">Tarih</label><input type="date" value={adminEditItem.tarih} onChange={e => setAdminEditItem({...adminEditItem, tarih: e.target.value})} className="w-full p-2 border rounded-lg"/></div>
+                     <div><label className="text-xs text-slate-500">Tarih</label><input type="date" value={adminEditItem.tarih} min="2025-01-01" onChange={e => setAdminEditItem({...adminEditItem, tarih: e.target.value})} className="w-full p-2 border rounded-lg"/></div>
                      <div><label className="text-xs text-slate-500">Dönem</label><select value={adminEditItem.donem} onChange={e => setAdminEditItem({...adminEditItem, donem: e.target.value})} className="w-full p-2 border rounded-lg">{DONEMLER.map(d => <option key={d} value={d}>{d}</option>)}</select></div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -1107,11 +1132,12 @@ const MainContent = () => {
   const [users, setUsers] = useState<UserDefinition[]>(INITIAL_USERS);
   const [loading, setLoading] = useState(false);
   const [fileLocation, setFileLocation] = useState<DriveLocation | null>(null);
+  const [isDemoMode, setIsDemoMode] = useState(false);
 
-  // Load data from OneDrive when authenticated
+  // Load data from OneDrive when authenticated (REAL MODE)
   useEffect(() => {
     const loadData = async () => {
-      if (isAuthenticated && accounts.length > 0) {
+      if (isAuthenticated && accounts.length > 0 && !isDemoMode) {
         setLoading(true);
         try {
           const token = await GraphService.getToken(instance, accounts);
@@ -1122,9 +1148,8 @@ const MainContent = () => {
           if (location) {
             data = await GraphService.readDatabase(token, location);
           } else {
-             // Dosya bulunamadı, varsayılan veri ile başlatılabilir veya boş
-             // Ancak user kaydederse oluşturulacak.
-             // Şimdilik okuma hatası olmasın diye boş başlatıyoruz.
+             // Dosya yoksa ve giriş yapan kişi Admin değilse bile
+             // İlk çalıştırmada bir yapıya ihtiyacımız var.
              data = { records: [], users: INITIAL_USERS };
           }
 
@@ -1138,7 +1163,7 @@ const MainContent = () => {
           if (foundUser) {
             setCurrentUser(foundUser);
           } else {
-             // Yeni kullanıcı oluştur
+             // Yeni kullanıcı oluştur (Misafir)
              const newUser: UserDefinition = {
                  id: Math.random().toString(),
                  username: email,
@@ -1148,11 +1173,15 @@ const MainContent = () => {
              };
              setCurrentUser(newUser);
              setUsers(prev => [...prev, newUser]);
+             // Yeni kullanıcıyı kaydetmeyi dene (eğer dosya varsa ve yazma izni varsa)
+             if(location) {
+                 // Burada recursive update olmaması için basit bir flag veya logic eklenebilir
+                 // Şimdilik sadece state update ediyoruz, kullanıcı ilk işlem yaptığında save tetiklenir
+             }
           }
 
         } catch (error) {
           console.error("Veri yükleme hatası:", error);
-          // Hata durumunda sessiz kalıyoruz, UI'da belki gösterilebilir.
         } finally {
           setLoading(false);
         }
@@ -1160,7 +1189,7 @@ const MainContent = () => {
     };
 
     loadData();
-  }, [isAuthenticated, accounts, instance]);
+  }, [isAuthenticated, accounts, instance, isDemoMode]);
 
   const handleUpdateDatabase = async (newRecords: MesaiKaydi[], newUsers?: UserDefinition[]) => {
       const recordsToSave = newRecords;
@@ -1169,8 +1198,8 @@ const MainContent = () => {
       setDatabase(recordsToSave);
       if(newUsers) setUsers(usersToSave);
 
-      // If online (authenticated via MSAL), save to OneDrive
-      if (isAuthenticated && accounts.length > 0) {
+      // If online (authenticated via MSAL) and NOT in demo mode, save to OneDrive
+      if (isAuthenticated && accounts.length > 0 && !isDemoMode) {
           try {
               const token = await GraphService.getToken(instance, accounts);
               const dataToSave: AppDatabase = { records: recordsToSave, users: usersToSave };
@@ -1190,22 +1219,32 @@ const MainContent = () => {
   };
 
   const handleDemoLogin = (userIndex: number) => {
-      const user = INITIAL_USERS[userIndex];
-      setCurrentUser(user);
-      setUsers(INITIAL_USERS);
-      // Demo verileri
-      const mockData: MesaiKaydi[] = [
-          {id: '101', donem: 'Ocak 2024', isim: 'Mehmet Demir', tarih: '2024-01-15', baslangic: '18:00', bitis: '20:00', neden: 'Proje teslimi', kaydeden: 'mehmet.user@sirket.com', kayitZamani: '2024-01-15 20:05', durum: 'onaylandi', mesaiTuru: 'Normal', carpan: 1.0},
-          {id: '102', donem: 'Şubat 2024', isim: 'Ayşe Kara', tarih: '2024-02-10', baslangic: '09:00', bitis: '13:00', neden: 'Haftasonu çalışması', kaydeden: 'ayse.user@sirket.com', kayitZamani: '2024-02-10 13:10', durum: 'bekliyor', mesaiTuru: 'Hafta Sonu', carpan: 1.5},
-          {id: '103', donem: 'Mart 2024', isim: 'Mehmet Demir', tarih: '2024-03-20', baslangic: '18:00', bitis: '21:00', neden: 'Acil düzeltme', kaydeden: 'mehmet.user@sirket.com', kayitZamani: '2024-03-20 21:05', durum: 'reddedildi', reddedilmeNedeni: 'Mesai onayı alınmamış', mesaiTuru: 'Normal', carpan: 1.0}
-      ];
-      setDatabase(mockData);
+      setIsDemoMode(true);
+      // Demo kullanıcıları static list'ten al
+      const demoUsers = [
+          { id: "1", username: "admin@sirket.com", role: 'admin', name: "Sistem Yöneticisi", department: "IT" },
+          { id: "2", username: "lider@sirket.com", role: 'team_lead', name: "Takım Lideri", department: "Satış" },
+          { id: "3", username: "personel@sirket.com", role: 'user', name: "Personel Ahmet", department: "Satış", manager: "lider@sirket.com" }
+      ] as UserDefinition[];
+
+      const user = demoUsers.find(u => 
+          (userIndex === 0 && u.role === 'admin') || 
+          (userIndex === 1 && u.role === 'team_lead') || 
+          (userIndex === 2 && u.role === 'user')
+      );
+
+      setCurrentUser(user || demoUsers[2]);
+      setUsers(demoUsers);
+      
+      // Boş DB ile başlat (Demo verisi yok, temiz sayfa)
+      setDatabase([]);
   };
   
   const handleLogout = () => {
-      if (isAuthenticated) {
+      if (isAuthenticated && !isDemoMode) {
           instance.logoutPopup();
       }
+      setIsDemoMode(false);
       setCurrentUser(null);
       setDatabase([]);
   };
@@ -1216,7 +1255,7 @@ const MainContent = () => {
               <div className="text-center">
                   <Loader2 size={48} className="animate-spin text-blue-600 mx-auto mb-4"/>
                   <h2 className="text-lg font-bold text-slate-700">Veriler Yükleniyor...</h2>
-                  <p className="text-slate-400 text-sm">Microsoft OneDrive bağlantısı kuruluyor</p>
+                  <p className="text-slate-400 text-sm">Microsoft OneDrive (2025) bağlantısı kuruluyor</p>
               </div>
           </div>
       );
@@ -1233,8 +1272,10 @@ const MainContent = () => {
                <div className="flex items-center gap-3">
                    <div className="bg-blue-600 p-2 rounded-xl text-white shadow-lg shadow-blue-200"><AppLogo size={24} className="text-white"/></div>
                    <div>
-                       <h1 className="font-bold text-lg md:text-xl text-slate-800 leading-tight">Mesai Takip</h1>
-                       <div className="text-[10px] md:text-xs text-slate-400 font-medium tracking-wide">KURUMSAL PORTAL</div>
+                       <h1 className="font-bold text-lg md:text-xl text-slate-800 leading-tight">Mesai Takip 2025</h1>
+                       <div className="text-[10px] md:text-xs text-slate-400 font-medium tracking-wide">
+                           {isDemoMode ? <span className="text-red-500 font-bold">DEMO MODU</span> : "KURUMSAL PORTAL"}
+                       </div>
                    </div>
                </div>
                <div className="flex items-center gap-3 md:gap-6">
